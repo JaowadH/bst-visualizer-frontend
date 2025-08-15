@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: bst-visualizer-frontend
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
+    # Build-time env passed into Docker ARG (for Vite)
+    envVars:
+      - key: VITE_API_BASE
+        value: https://bst-visualizer-backend.onrender.com/api
+        build: true
