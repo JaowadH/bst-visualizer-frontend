@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, Github, Layers, History, Database, ChevronRight } from "lucide-react";
 
-const BACKEND_GITHUB = "https://github.com/JaowadH/bst-visualizer-backend.git";
+const BACKEND_GITHUB = "https://github.com//sdat-s4-sprint-backend"; // change if needed
 
 export default function Home() {
   useEffect(() => {
