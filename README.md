@@ -3,7 +3,8 @@
 Build, view, and save **Binary Search Trees** from a list of numbers.
 Clean Tailwind UI, SPA routing, local history, and a pluggable backend API.
 
-> Backend repo: [https://github.com/007snoop/sdat-s4-sprint-backend](https://github.com/007snoop/sdat-s4-sprint-backend)
+> Backend repo: [[https://github.com/JaowadH/bst-visualizer-backend.git](https://github.com/JaowadH/bst-visualizer-backend.git)]
+> Hosted link: https://bst-visualizer-frontend.onrender.com
 
 ---
 
