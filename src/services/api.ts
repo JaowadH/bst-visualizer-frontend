@@ -1,16 +1,37 @@
-import axios from 'axios'
-import type { ListResponse, TreeResponse } from '../types'
+import axios from "axios";
 
-const BASE = import.meta.env.VITE_API_BASE_URL || ''
+/**
+ * Prefer env, but fall back to Render backend.
+ * This removes the need to bake a build-time variable.
+ */
+export const API_BASE =
+  (import.meta.env.VITE_API_BASE as string) ??
+  "https://bst-visualizer-backend.onrender.com/api";
 
-console.log('API BASE =', BASE);
+console.log("API BASE =", API_BASE);
 
-export async function createTree(numbers: number[], balanced: boolean): Promise<TreeResponse> {
-  const { data } = await axios.post(`${BASE}/trees`, { numbers, balanced })
-  return data
-}
+export const api = axios.create({
+  baseURL: API_BASE,
+  headers: { "Content-Type": "application/json" },
+});
 
-export async function listTrees(offset = 0, limit = 20): Promise<ListResponse> {
-  const { data } = await axios.get(`${BASE}/trees`, { params: { offset, limit } })
-  return data
+/**
+ * POST first (typical for create/process),
+ * and if the server replies 405, auto-fallback to GET with query params.
+ */
+export async function createTree(numbers: number[], balanced: boolean) {
+  try {
+    const res = await api.post("/trees", { numbers, balanced });
+    return res.data;
+  } catch (err: any) {
+    if (err?.response?.status === 405) {
+      const qs = new URLSearchParams({
+        numbers: numbers.join(","),
+        balanced: String(balanced),
+      }).toString();
+      const res = await api.get(`/trees?${qs}`);
+      return res.data;
+    }
+    throw err;
+  }
 }

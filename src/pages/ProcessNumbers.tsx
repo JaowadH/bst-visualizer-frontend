@@ -1,49 +1,52 @@
-import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams, Link } from 'react-router-dom'
-import { createTree } from '../services/api'
-import type { TreeResponse } from '../types'
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { createTree } from "../services/api";
 
 export default function ProcessNumbers() {
-  const [params] = useSearchParams()
-  const [data, setData] = useState<TreeResponse | null>(null)
-  const [error, setError] = useState<string | null>(null)
+  const [params] = useSearchParams();
+  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<any>(null);
 
   const numbers = useMemo(
-    () => (params.get('numbers') || '')
-      .split(',')
-      .map(s => s.trim())
-      .filter(Boolean)
-      .map(Number),
+    () =>
+      (params.get("numbers") || "")
+        .split(/[, ]+/)
+        .map(Number)
+        .filter(Number.isFinite),
     [params]
-  )
-  const balanced = (params.get('balanced') || 'false') === 'true'
+  );
+
+  const balanced = params.get("balanced") === "true";
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await createTree(numbers, balanced)
-        setData(res)
+        setError(null);
+        setData(null);
+        const result = await createTree(numbers, balanced);
+        setData(result);
       } catch (e: any) {
-        setError(e?.message || 'Failed to create tree')
+        setError(e?.message || "Request failed");
       }
-    })()
-  }, [numbers.join(','), balanced])
+    })();
+  }, [numbers.join(","), balanced]);
 
   return (
-    <section>
-      <h2>Processing</h2>
-      <p>Input numbers: <code>{numbers.join(', ')}</code> | Balanced: <strong>{String(balanced)}</strong></p>
-      {error && <p style={{ color: 'crimson' }}>{error}</p>}
-      {!error && !data && <p>Building tree…</p>}
+    <main className="mx-auto max-w-4xl p-4">
+      <div className="text-slate-600">
+        Processing<br />
+        <span className="text-slate-800 font-medium">
+          Input numbers: {numbers.join(", ")} | Balanced: {String(balanced)}
+        </span>
+      </div>
+
+      {error && <div className="mt-3 text-rose-600">Error: {error}</div>}
+
       {data && (
-        <>
-          <h3>Result</h3>
-          <pre style={{ background:'#111', color:'#0f0', padding:12, borderRadius:8, overflow:'auto' }}>
+        <pre className="mt-4 rounded-xl bg-slate-950 text-slate-100 text-xs p-3 overflow-auto">
 {JSON.stringify(data, null, 2)}
-          </pre>
-          <p><Link to="/previous-trees">See previous trees →</Link></p>
-        </>
+        </pre>
       )}
-    </section>
-  )
+    </main>
+  );
 }
