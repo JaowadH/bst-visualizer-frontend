@@ -164,7 +164,7 @@ The image serves `dist/` via **Nginx** with SPA fallback (`/index.html`) so clie
 1. Push to GitHub.
 2. In Render: **New → Web Service → Connect repo**.
 3. Environment: **Docker** (uses your `Dockerfile`).
-4. (Optional) Add env var **`VITE_API_BASE`** and mark **Available at build time**.
+4. Add env var **`VITE_API_BASE`** and mark **Available at build time**.
 
 **Option B – `render.yaml`** (if included): Render will auto-provision from it.
 
